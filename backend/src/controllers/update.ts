@@ -1,6 +1,10 @@
-const updateService = require("../services/updateService");
+import express from "express";
+import * as updateService from "../services/update";
 
-const getAllUpdates = async (_, res) => {
+export const getAllUpdates = async (
+  req: express.Request,
+  res: express.Response
+) => {
   try {
     const allUpdates = await updateService.getAllUpdates();
     res.send({
@@ -15,8 +19,4 @@ const getAllUpdates = async (_, res) => {
       },
     });
   }
-};
-
-module.exports = {
-  getAllUpdates,
 };

@@ -1,13 +1,9 @@
-const pg = require("pg");
+import pg from "pg";
 
-const pool = new pg.Pool({
+export const pool = new pg.Pool({
   user: "myuser",
   host: "localhost",
   database: "mydb",
   password: "mypassword",
   port: 5432,
 });
-
-module.exports = {
-  pool,
-};
