@@ -20,3 +20,23 @@ export const getAllUpdates = async (
     });
   }
 };
+
+export const getUpdateById = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const update = await updateService.getUpdateById(Number(req.params.id));
+    res.send({
+      status: "OK",
+      data: update,
+    });
+  } catch (error) {
+    res.status(error?.status || 500).send({
+      status: "FAILED",
+      data: {
+        error: error?.message || error,
+      },
+    });
+  }
+};
