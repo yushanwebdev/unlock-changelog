@@ -4,15 +4,16 @@ import bodyParser from "body-parser";
 import compression from "compression";
 import cors from "cors";
 import v1Router from "./v1/router";
+import morgan from "morgan";
 
 const app = express();
 
+app.use(morgan("tiny"));
 app.use(
   cors({
     credentials: true,
   })
 );
-
 app.use(compression());
 app.use(bodyParser.json());
 
