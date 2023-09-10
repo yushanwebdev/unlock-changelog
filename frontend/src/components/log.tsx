@@ -1,6 +1,8 @@
+import { Update } from "@/lib/types";
 import Link from "next/link";
+import { format } from "date-fns";
 
-export default function Log() {
+export default function Log({ title, updated_at }: Update) {
   return (
     <Link href="/abc">
       <div className="flex flex-col items-center text-xl text-center md:flex-row lg:text-2xl logs-list-item text-neutral-400 relative z-[1] md:pl-36 md:gap-6 lg:pl-44 lg:gap-8">
@@ -19,9 +21,9 @@ export default function Log() {
           </div>
         </div>
         <span className="mb-3 md:mb-0 md:absolute md:z-[1] md:left-0">
-          May 17, 2023
+          {format(new Date(updated_at), "MMM d, yyyy")}
         </span>
-        <p>PHP support, faster microVMs and better stability</p>
+        <p>{title}</p>
       </div>
     </Link>
   );

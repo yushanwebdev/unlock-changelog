@@ -1,7 +1,15 @@
-export default function List() {
+import Container from "@/components/container";
+import Log from "@/components/log";
+import { getAllUpdates } from "@/lib/api";
+
+export default async function List() {
+  const allUpdates = await getAllUpdates();
+
   return (
-    <main>
-      <h2>List</h2>
-    </main>
+    <Container>
+      {allUpdates.map((update) => (
+        <Log key={update.id} {...update} />
+      ))}
+    </Container>
   );
 }
