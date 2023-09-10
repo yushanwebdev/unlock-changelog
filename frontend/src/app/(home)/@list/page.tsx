@@ -7,8 +7,10 @@ export default async function List() {
 
   return (
     <Container>
-      {allUpdates.map((update) => (
-        <Log key={update.id} {...update} />
+      {allUpdates.slice(1).map((update) => (
+        <Log key={update.id} {...update}>
+          <p className="md:flex md:items-center">{update.title}</p>
+        </Log>
       ))}
     </Container>
   );

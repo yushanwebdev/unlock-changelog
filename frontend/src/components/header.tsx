@@ -10,7 +10,7 @@ export default function Header() {
           alt="Yushan"
           width="24"
           height="24"
-          className="mr-auto"
+          className="mr-auto rounded-sm"
         />
         <a href="https://github.com/yushanwebdev/" target="_blank">
           GitHub

@@ -1,8 +1,8 @@
 import Header from "@/components/header";
 import "./globals.css";
-import { Inter_Tight } from "next/font/google";
+import { Tektur } from "next/font/google";
 
-const interTight = Inter_Tight({ subsets: ["latin"] });
+const interTight = Tektur({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,

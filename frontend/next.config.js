@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "unlock-yushanwebdev.vercel.app",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 };
