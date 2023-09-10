@@ -1,48 +1,55 @@
-# syntax = docker/dockerfile:1
+# base node image
+FROM node:18-bullseye-slim as base
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=18.0.0
-FROM node:${NODE_VERSION}-slim as base
+# install all node_modules, including dev
+FROM base as deps
 
-LABEL fly_launch_runtime="Node.js"
+RUN mkdir /app/
+WORKDIR /app/
 
-# Node.js app lives here
-WORKDIR /app
+ADD package.json package-lock.json ./
+RUN npm install
 
-# Set production environment
-ENV NODE_ENV="production"
+# setup production node_modules
+FROM base as production-deps
 
+RUN mkdir /app/
+WORKDIR /app/
 
-# Throw-away build stage to reduce size of final image
+COPY --from=deps /app/node_modules /app/node_modules
+ADD package.json ./
+RUN npm prune --production
+
+# build app
 FROM base as build
 
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install -y build-essential pkg-config python
+RUN mkdir /app/
+WORKDIR /app/
 
-# Install node modules
-COPY package-lock.json package.json ./
-RUN npm ci
+COPY --from=deps /app/node_modules /app/node_modules
 
-# Install TypeScript
-RUN npm install -g typescript
+# Copy all source files and build
+ADD . .
+RUN npm run build
 
-# Copy application code
-COPY . .
-
-# Compile TypeScript to JavaScript
-RUN tsc
-
-# Final stage for app image
+# build smaller image for running
 FROM base
 
-# Copy built application
-COPY --from=build /app /app
+ENV PORT="3000"
+ENV NODE_ENV="production"
 
-# Copy transpiled JavaScript code and other production files
-# (assuming your tsconfig "outDir" is set to "dist")
-COPY --from=build /app/build /app/build
+RUN mkdir /app/
+WORKDIR /app/
 
-# Start the server by default, this can be overwritten at runtime
+# Copy node_modules for production from production-deps stage
+COPY --from=production-deps /app/node_modules /app/node_modules
+
+# Copy built files from build stage
+COPY --from=build /app/dist /app/dist
+COPY package.json ./
+
+# Expose port 3000
 EXPOSE 3000
-CMD [ "node", "build/index.js" ]
+
+# Assuming the transpiled code is in a directory named "dist"
+CMD ["npm", "start"]
