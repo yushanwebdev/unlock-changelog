@@ -7,6 +7,7 @@ import v1Router from "./v1/router";
 import morgan from "morgan";
 
 const app = express();
+const PORT = process.env.PORT || 8080;
 
 app.use(morgan("tiny"));
 app.use(
@@ -19,8 +20,8 @@ app.use(bodyParser.json());
 
 const server = http.createServer(app);
 
-server.listen(8080, () => {
-  console.log("Server is running on http://localhost:8080");
+server.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 app.use("/api/v1", v1Router());

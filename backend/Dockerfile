@@ -1,47 +1,48 @@
-# base node image
-FROM node:16-bullseye-slim AS base
+# syntax = docker/dockerfile:1
 
-# install all node_modules, including dev
-FROM base AS deps
+# Adjust NODE_VERSION as desired
+ARG NODE_VERSION=18.0.0
+FROM node:${NODE_VERSION}-slim as base
 
-RUN mkdir /app/
-WORKDIR /app/
+LABEL fly_launch_runtime="Node.js"
 
-ADD package.json ./
-RUN npm install
+# Node.js app lives here
+WORKDIR /app
 
-# setup production node_modules
-FROM base AS production-deps
-
-RUN mkdir /app/
-WORKDIR /app/
-
-COPY --from=deps /app/node_modules /app/node_modules
-ADD package.json ./
-RUN npm prune --omit=dev
-
-# build app
-FROM base AS build
-
-RUN mkdir /app/
-WORKDIR /app/
-
-COPY --from=deps /app/node_modules /app/node_modules
-
-# build smaller image for running
-FROM base
-
-ENV PORT="3000"
+# Set production environment
 ENV NODE_ENV="production"
 
-RUN mkdir /app/
-WORKDIR /app/
 
-COPY --from=production-deps /app/node_modules /app/node_modules
+# Throw-away build stage to reduce size of final image
+FROM base as build
 
-ADD . .
+# Install packages needed to build node modules
+RUN apt-get update -qq && \
+    apt-get install -y build-essential pkg-config python
 
-# Expose port 3000
+# Install node modules
+COPY package-lock.json package.json ./
+RUN npm ci
+
+# Install TypeScript
+RUN npm install -g typescript
+
+# Copy application code
+COPY . .
+
+# Compile TypeScript to JavaScript
+RUN tsc
+
+# Final stage for app image
+FROM base
+
+# Copy built application
+COPY --from=build /app /app
+
+# Copy transpiled JavaScript code and other production files
+# (assuming your tsconfig "outDir" is set to "dist")
+COPY --from=build /app/build /app/build
+
+# Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD [ "node", "build/index.js" ]
