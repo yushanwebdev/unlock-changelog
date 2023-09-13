@@ -1,12 +1,16 @@
 <div style="display: flex; gap: 10px">
-    <img src="https://unlock-yushanwebdev.vercel.app/icon.png" alt="logo" style="width: 40px;height: 40px; border-radius: 3px;">
+    <a style="border-radius: 3px;" href="https://unlock-changelog.vercel.app">
+        <img src="https://unlock-yushanwebdev.vercel.app/icon.png" alt="logo" style="width: 40px;height: 40px;">
+    </a>
     <h1>Unlock Changelog</h1>
 </div>
 
-This is a web application that used to track the changes done for the unlock password management web app.
+A web application that used to track the changes done for the unlock password management web app.
 
 - Frontend: [unlock-changelog.vercel.app](https://unlock-changelog.vercel.app)
-- Backend: [unlock-changelog.fly.dev](https://unlock-changelog.fly.dev)
+- Backend:
+  - [unlock-changelog.fly.dev/api/v1/updates](https://unlock-changelog.fly.dev/api/v1/updates)
+  - [unlock-changelog.fly.dev/api/v1/updates/1](https://unlock-changelog.fly.dev/api/v1/updates/1)
 
 ## Getting Started
 
@@ -33,7 +37,7 @@ To get started with this project, follow these steps:
 - [Next.js](https://nextjs.org/) - The frontend framework used
 - [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript
 - [Tailwind CSS](https://tailwindcss.com/) - The CSS framework used
-- [Shadcn UI](https://ui.shadcn.com) - The UI component library used
+- [shadcn/ui](https://ui.shadcn.com) - The UI component library used
 - [Vercel](https://vercel.com/) - The deployment platform used
 
 ### Backend
